@@ -86,7 +86,7 @@ spec:
         
         stage('Publish an artifact to CD'){
             steps{
-                cloudBeesFlowPublishArtifact  onfiguration: "${cdconfiguration}",
+                cloudBeesFlowPublishArtifact  configuration: "${cdconfiguration}",
                      repositoryName: 'default',
                      artifactName: 'de.caternberg:jweb',
                      artifactVersion: "${env.BUILD_NUMBER}",
