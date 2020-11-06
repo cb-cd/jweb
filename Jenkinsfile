@@ -86,13 +86,12 @@ spec:
         
         stage('Publish an artifact to CD'){
             steps{
-                cloudBeesFlowPublishArtifact {
-                     configuration cdconfiguration
-                     repositoryName 'default'
-                     artifactName 'de.caternberg:jweb'
-                     artifactVersion "${env.BUILD_NUMBER}"
-                     filePath 'target/jweb.war'
-                }
+                cloudBeesFlowPublishArtifact  onfiguration: "${cdconfiguration}",
+                     repositoryName: 'default',
+                     artifactName: 'de.caternberg:jweb',
+                     artifactVersion: "${env.BUILD_NUMBER}",
+                     filePath: 'target/jweb.war'
+
             }
         }
       
@@ -136,7 +135,7 @@ spec:
 
             steps {
                 cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: "${cdconfiguration}", filePath: 'target/*.jar'
-                cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-jar', artifactVersion: '1.0', configuration: ${cdconfiguration}, filePath: 'target/*.jar', repositoryName: 'default'
+                cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-jar', artifactVersion: '1.0', configuration: "${cdconfiguration}", filePath: 'target/*.jar', repositoryName: 'default'
             }
             post {
                 success {
