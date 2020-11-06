@@ -1,7 +1,7 @@
 def appName = "jweb"
 def applicationProcessName = "deploy"
 def environmentName = "acaternberg_DEV_basicTraining"
-def configuration = "cb-cd"
+def cdconfiguration = "cb-cd"
 def projectName = "Training_acaternberg"
 def pipelineName = "deployPL"
 
@@ -87,7 +87,7 @@ spec:
         stage('Publish an artifact to CD'){
             steps{
                 cloudBeesFlowPublishArtifact {
-                     configuration configuration
+                     onfiguration cdconfiguration
                      repositoryName 'default'
                      artifactName 'de.caternberg:jweb'
                      artifactVersion "${env.BUILD_NUMBER}"
@@ -111,7 +111,7 @@ spec:
                 */
                 cloudBeesFlowDeployApplication applicationName: "${appName}",
                         applicationProcessName: "${applicationProcessName}",
-                        configuration: "${configuration}",
+                        configuration: "${cdconfiguration}",
                         deployParameters: '{"runProcess":{"applicationName":"honey","applicationProcessName":"InstallHoney","parameter":[' +
                                 '{"actualParameterName":"JENKINS_BUILD_NUMBER","value":"${BUILD_NUMBER}"},' +
                                 '{"actualParameterName":"JENKINS_BUILD_ID","value":"${BUILD_ID}"},' +
@@ -135,8 +135,8 @@ spec:
             }
 
             steps {
-                cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: "${configuration}", filePath: 'target/*.jar'
-                cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-jar', artifactVersion: '1.0', configuration: ${configuration}, filePath: 'target/*.jar', repositoryName: 'default'
+                cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: "${cdconfiguration}", filePath: 'target/*.jar'
+                cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-jar', artifactVersion: '1.0', configuration: ${cdconfiguration}, filePath: 'target/*.jar', repositoryName: 'default'
             }
             post {
                 success {
@@ -158,7 +158,7 @@ spec:
             }
 
             steps {
-               cloudBeesFlowRunPipeline addParam: '{"pipeline":{"pipelineName":"${pipelineName}","parameters":[{"parameterName":"JENKINS_BUILD_URL","parameterValue":"${BUILD_URL}"}]}}', configuration: "${configuration}", pipelineName: "${pipelineName}", projectName: "${projectName}"
+               cloudBeesFlowRunPipeline addParam: '{"pipeline":{"pipelineName":"${pipelineName}","parameters":[{"parameterName":"JENKINS_BUILD_URL","parameterValue":"${BUILD_URL}"}]}}', configuration: "${cdconfiguration}", pipelineName: "${pipelineName}", projectName: "${projectName}"
             }
         }
             
