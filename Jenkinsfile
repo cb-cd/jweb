@@ -1,3 +1,10 @@
+def appName="jweb"
+def applicationProcessName="deploy"
+def environmentName="acaternberg_DEV_basicTraining"
+def configuration="cb-cd"
+def projectName="Training_acaternberg"
+def pipelineName="deployPL"
+
 pipeline {
     agent {
         kubernetes {
@@ -35,7 +42,7 @@ spec:
         stage('Run maven build') {
             steps {
                 container('maven'){
-                    configFileProvider([configFile(fileId: 'stusettingsxml', variable: 'MAVEN_SETTINGS_XML')]) {
+                    configFileProvider([configFile(fileId: 'globl-maven-settins', variable: 'MAVEN_SETTINGS_XML')]) {
                         sh "mvn -s $MAVEN_SETTINGS_XML deploy"
                         //sh "mvn -X -Dmaven.wagon.http.ssl.insecure=true -s $MAVEN_SETTINGS_XML deploy"
                     }
@@ -48,8 +55,8 @@ spec:
             }
             steps{
                step([$class: 'ElectricFlowRunProcedure',
-                      configuration: 'CdConfiguration',
-                      projectName : 'nectar',
+                      configuration: ${configuration},
+                      projectName : ${projectName}
                       procedureName : 'chkCreds',
                       procedureParameters : """{"procedure":{"procedureName":"chkCreds",
                       "parameters":[
@@ -78,7 +85,7 @@ spec:
         
         stage('Publish an artifact to CD'){
             steps{
-                cloudBeesFlowPublishArtifact configuration: 'CdConfiguration',
+                cloudBeesFlowPublishArtifact configuration: ${configuration},
                                              repositoryName: 'default',
                                              artifactName: 'com.stushq:jweb',
                                              artifactVersion: "${env.BUILD_NUMBER}" ,filePath: 'target/jweb.war'
@@ -98,9 +105,9 @@ spec:
                                               applicationProcessName: 'InstallHoney',
                                               environmentName: 'dev', projectName: 'nectar'
                 */
-                cloudBeesFlowDeployApplication applicationName: 'honey',
-                        applicationProcessName: 'InstallHoney',
-                        configuration: 'CdConfiguration',
+                cloudBeesFlowDeployApplication applicationName: ${appName},
+                        applicationProcessName: ${applicationProcessName},
+                        configuration: ${configuration},
                         deployParameters: '{"runProcess":{"applicationName":"honey","applicationProcessName":"InstallHoney","parameter":[' +
                                 '{"actualParameterName":"JENKINS_BUILD_NUMBER","value":"${BUILD_NUMBER}"},' +
                                 '{"actualParameterName":"JENKINS_BUILD_ID","value":"${BUILD_ID}"},' +
@@ -109,8 +116,8 @@ spec:
                                 '{"actualParameterName":"JENKINS_JOB_NAME","value":"${JOB_NAME}"},' +
                                 '{"actualParameterName":"JENKINS_JOB_BASE_NAME","value":"${JOB_BASE_NAME}"},' +
                                 ']}}',
-                        environmentName: 'dev',
-                        projectName: 'nectar'
+                        environmentName: ${environmentName},
+                        projectName: ${projectName}
 
             }
 
@@ -125,7 +132,8 @@ spec:
             }
 
             steps {
-                cloudBeesFlowRunPipeline addParam: '{"pipeline":{"pipelineName":"deployHoney","parameters":[{"parameterName":"JENKINS_BUILD_URL","parameterValue":"${BUILD_URL}"}]}}', configuration: 'CdConfiguration', pipelineName: 'deployHoney', projectName: 'nectar'
+               // cloudBeesFlowRunPipeline addParam: '{"pipeline":{"pipelineName":"deployHoney","parameters":[{"parameterName":"JENKINS_BUILD_URL","parameterValue":"${BUILD_URL}"}]}}', configuration: 'CdConfiguration', pipelineName: 'deployHoney', projectName: 'nectar'
+                cloudBeesFlowRunPipeline addParam: "{pipeline:{pipelineName: ${pipelineName},parameters:[{parameterName: JENKINS_BUILD_URL,parameterValue: ${BUILD_URL}}]}}, configuration: ${configuration}, pipelineName: ${pipelineName}, projectName: ${projectName}"
             }
         }
             
