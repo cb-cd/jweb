@@ -86,7 +86,7 @@ spec:
         
         stage('Publish an artifact to CD'){
             steps{
-                cloudBeesFlowPublishArtifact configuration: ${configuration},
+                cloudBeesFlowPublishArtifact configuration: "${configuration}",
                                              repositoryName: 'default',
                                              artifactName: 'com.stushq:jweb',
                                              artifactVersion: "${env.BUILD_NUMBER}" ,filePath: 'target/jweb.war'
@@ -106,9 +106,9 @@ spec:
                                               applicationProcessName: 'InstallHoney',
                                               environmentName: 'dev', projectName: 'nectar'
                 */
-                cloudBeesFlowDeployApplication applicationName: ${appName},
-                        applicationProcessName: ${applicationProcessName},
-                        configuration: ${configuration},
+                cloudBeesFlowDeployApplication applicationName: "${appName}",
+                        applicationProcessName: "${applicationProcessName}",
+                        configuration: "${configuration}",
                         deployParameters: '{"runProcess":{"applicationName":"honey","applicationProcessName":"InstallHoney","parameter":[' +
                                 '{"actualParameterName":"JENKINS_BUILD_NUMBER","value":"${BUILD_NUMBER}"},' +
                                 '{"actualParameterName":"JENKINS_BUILD_ID","value":"${BUILD_ID}"},' +
@@ -117,8 +117,8 @@ spec:
                                 '{"actualParameterName":"JENKINS_JOB_NAME","value":"${JOB_NAME}"},' +
                                 '{"actualParameterName":"JENKINS_JOB_BASE_NAME","value":"${JOB_BASE_NAME}"},' +
                                 ']}}',
-                        environmentName: ${environmentName},
-                        projectName: ${projectName}
+                        environmentName: "${environmentName}",
+                        projectName: "${projectName}"
 
             }
 
@@ -132,7 +132,7 @@ spec:
             }
 
             steps {
-                cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: ${configuration}, filePath: 'target/*.jar'
+                cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: "${configuration}", filePath: 'target/*.jar'
                 cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-jar', artifactVersion: '1.0', configuration: ${configuration}, filePath: 'target/*.jar', repositoryName: 'default'
             }
             post {
@@ -155,8 +155,7 @@ spec:
             }
 
             steps {
-               // cloudBeesFlowRunPipeline addParam: '{"pipeline":{"pipelineName":"deployHoney","parameters":[{"parameterName":"JENKINS_BUILD_URL","parameterValue":"${BUILD_URL}"}]}}', configuration: 'CdConfiguration', pipelineName: 'deployHoney', projectName: 'nectar'
-                cloudBeesFlowRunPipeline addParam: "{pipeline:{pipelineName: ${pipelineName},parameters:[{parameterName: JENKINS_BUILD_URL,parameterValue: ${BUILD_URL}}]}}, configuration: ${configuration}, pipelineName: ${pipelineName}, projectName: ${projectName}"
+               cloudBeesFlowRunPipeline addParam: '{"pipeline":{"pipelineName":"${pipelineName}","parameters":[{"parameterName":"JENKINS_BUILD_URL","parameterValue":"${BUILD_URL}"}]}}', configuration: "${configuration}", pipelineName: "${pipelineName}", projectName: "${projectName}"
             }
         }
             
