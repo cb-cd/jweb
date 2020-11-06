@@ -1,9 +1,9 @@
-def appName="jweb"
-def applicationProcessName="deploy"
-def environmentName="acaternberg_DEV_basicTraining"
-def configuration="cb-cd"
-def projectName="Training_acaternberg"
-def pipelineName="deployPL"
+def appName = "jweb"
+def applicationProcessName = "deploy"
+def environmentName = "acaternberg_DEV_basicTraining"
+def configuration = "cb-cd"
+def projectName = "Training_acaternberg"
+def pipelineName = "deployPL"
 
 pipeline {
     agent {
@@ -86,10 +86,13 @@ spec:
         
         stage('Publish an artifact to CD'){
             steps{
-                cloudBeesFlowPublishArtifact configuration: "${configuration}",
-                                             repositoryName: 'default',
-                                             artifactName: 'com.stushq:jweb',
-                                             artifactVersion: "${env.BUILD_NUMBER}" ,filePath: 'target/jweb.war'
+                cloudBeesFlowPublishArtifact {
+                     configuration configuration
+                     repositoryName 'default'
+                     artifactName 'de.caternberg:jweb'
+                     artifactVersion "${env.BUILD_NUMBER}"
+                     filePath 'target/jweb.war'
+                }
             }
         }
       
