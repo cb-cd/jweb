@@ -43,7 +43,7 @@ spec:
         stage('Run maven build') {
             steps {
                 container('maven'){
-                    configFileProvider([configFile(fileId: 'globl-maven-settins', variable: 'MAVEN_SETTINGS_XML')]) {
+                    configFileProvider([configFile(fileId: 'global-maven-settings', variable: 'MAVEN_SETTINGS_XML')]) {
                         sh "mvn -s $MAVEN_SETTINGS_XML deploy"
                         //sh "mvn -X -Dmaven.wagon.http.ssl.insecure=true -s $MAVEN_SETTINGS_XML deploy"
                     }
