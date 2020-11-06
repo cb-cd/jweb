@@ -36,6 +36,7 @@ spec:
     environment {
         runProc = 'false'
         runDeploy = 'false'
+        deployArtifact = 'true'
         runPipe = "true"
     }
     stages {
@@ -124,6 +125,28 @@ spec:
 
 
 
+        }
+        stage("DeployArtifact") {
+            when {
+                environment name: 'deployArtifact', value: 'true'
+            }
+
+            steps {
+                cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: ${configuration}, filePath: 'target/*.jar'
+                cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-jar', artifactVersion: '1.0', configuration: ${configuration}, filePath: 'target/*.jar', repositoryName: 'default'
+            }
+            post {
+                success {
+                    echo "DeployArtifact Successfully"
+                    //Slack notification...
+                    //Jira update
+                }
+                failure {
+                    echo "DeployArtifact Failed"
+                    //Slack notification....
+                    //Jira update
+                }
+            }
         }
 
         stage('RunPipeline') {
