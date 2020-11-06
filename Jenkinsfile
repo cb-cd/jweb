@@ -56,8 +56,8 @@ spec:
             }
             steps{
                step([$class: 'ElectricFlowRunProcedure',
-                      configuration: ${configuration},
-                      projectName : ${projectName},
+                      configuration: "${configuration}",
+                      projectName : "${projectName}",
                       procedureName : 'chkCreds',
                       procedureParameters : """{"procedure":{"procedureName":"chkCreds",
                       "parameters":[
