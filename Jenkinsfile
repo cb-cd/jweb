@@ -23,6 +23,14 @@ spec:
     command:
     - cat
     tty: true
+    workingDir: "/home/jenkins/agent"
+    volumeMounts:
+      - name: maven-cache
+        mountPath: /tmp/.m2
+  volumes:
+    - name: maven-cache
+      persistentVolumeClaim:
+        claimName: maven-repo
 """
         }
     }
