@@ -134,8 +134,8 @@ spec:
             }
 
             steps {
-                cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: "${cdconfiguration}", filePath: 'target/*.jar'
-                cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-jar', artifactVersion: '1.0', configuration: "${cdconfiguration}", filePath: 'target/*.jar', repositoryName: 'default'
+                cloudBeesFlowCreateAndDeployAppFromJenkinsPackage configuration: "${cdconfiguration}", filePath: 'target/*.war'
+                cloudBeesFlowPublishArtifact artifactName: 'de.caternberg.example:maven-executable-war', artifactVersion: '1.0', configuration: "${cdconfiguration}", filePath: 'target/*.war', repositoryName: 'default'
             }
             post {
                 success {
